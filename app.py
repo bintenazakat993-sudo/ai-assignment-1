@@ -27,7 +27,9 @@ if st.button("Submit"):
 
     final_prompt = system_prompt + question
 
-    response = model.generate_content(final_prompt)
+   response = model.generate_content(
+    contents=final_prompt
+)
 
     st.subheader("AI Response:")
 
