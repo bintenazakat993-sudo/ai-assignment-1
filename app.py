@@ -3,15 +3,17 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-# Load API key from .env
+# Load API key
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
 
 genai.configure(api_key=api_key)
 
+# Gemini model
 model = genai.GenerativeModel("gemini-1.5-flash")
 
+# Streamlit UI
 st.title("AI Study Assistant")
 
 st.write("Ask questions about studies and programming")
@@ -27,10 +29,10 @@ if st.button("Submit"):
 
     final_prompt = system_prompt + question
 
-   response = model.generate_content(
-    contents=final_prompt
-)
+    response = model.generate_content(
+        contents=final_prompt
+    )
 
     st.subheader("AI Response:")
 
-    st.write(response.text) 
+    st.write(response.text)
