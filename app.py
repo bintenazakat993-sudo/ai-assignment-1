@@ -3,14 +3,16 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-# Load API key
+# Load environment variables
 load_dotenv()
 
+# Get API key
 api_key = os.getenv("GEMINI_API_KEY")
 
+# Configure Gemini
 genai.configure(api_key=api_key)
 
-# Gemini model
+# Load model
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Streamlit UI
@@ -22,17 +24,14 @@ question = st.text_input("Enter your question:")
 
 if st.button("Submit"):
 
-    system_prompt = """
-    You are a friendly study assistant.
-    Explain concepts simply for beginners.
-    """
+    if question:
 
-    final_prompt = system_prompt + question
+        try:
+            response = model.generate_content(question)
 
-    response = model.generate_content(
-        contents=final_prompt
-    )
+            st.subheader("AI Response:")
+            st.write(response.text)
 
-    st.subheader("AI Response:")
-
+        except Exception as e:
+            st.error(f"Error: {e}")
     st.write(response.text)
