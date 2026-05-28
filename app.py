@@ -7,8 +7,8 @@ api_key = st.secrets["GEMINI_API_KEY"]
 # Configure Gemini
 genai.configure(api_key=api_key)
 
-# Load model
-model = genai.GenerativeModel("gemini-1.5-flash")
+# Load Gemini model
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 # App title
 st.title("AI Study Assistant")
@@ -18,7 +18,7 @@ st.write("Ask questions about studies and programming")
 # User input
 question = st.text_input("Enter your question:")
 
-# Button click
+# Button
 if st.button("Submit"):
 
     if question:
