@@ -7,10 +7,10 @@ import os
 load_dotenv()
 
 # Get API key safely
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("GSK_API_KEY")
 
 if not api_key:
-    st.error("❌ GEMINI_API_KEY .env file mein nahi mili!")
+    st.error("❌ GSK_API_KEY .env file mein nahi mili!")
     st.stop()
 
 # Remove any extra spaces
