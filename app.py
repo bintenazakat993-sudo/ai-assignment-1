@@ -1,48 +1,42 @@
 import streamlit as st
-import google.generativeai as genai
+from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
 load_dotenv()
 
-# Get API key safely
-api_key = os.getenv("GSK_API_KEY")
+api_key = os.getenv("XAI_API_KEY")
 
 if not api_key:
-    st.error("❌ GSK_API_KEY .env file mein nahi mili!")
+    st.error("❌ XAI_API_KEY .env file mein nahi mili!")
     st.stop()
 
-# Remove any extra spaces
-api_key = api_key.strip()
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://api.x.ai/v1"
+)
 
-genai.configure(api_key=api_key)
-
-# Correct Model
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-st.title("AI Study Assistant")
-st.write("Ask questions about studies and programming")
+st.title("🧠 Grok AI Study Assistant")
+st.write("Koi bhi sawal poochho - Studies, Programming, ML, Assignment etc.")
 
 question = st.text_input("Enter your question:")
 
 if st.button("Submit"):
     if not question:
-        st.warning("Please enter a question!")
+        st.warning("Question likho!")
     else:
-        with st.spinner("AI soch raha hai..."):
+        with st.spinner("Grok jawab de raha hai..."):
             try:
-                system_prompt = """
-                You are a friendly study assistant.
-                Explain concepts simply for beginners.
-                """
-
-                final_prompt = system_prompt + "\n\nQuestion: " + question
-
-                response = model.generate_content(final_prompt)
-                
-                st.subheader("AI Response:")
-                st.write(response.text)
-                
+                response = client.chat.completions.create(
+                    model="grok-3",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful study assistant. Explain in easy language, mix Urdu if needed."},
+                        {"role": "user", "content": question}
+                    ],
+                    temperature=0.7,
+                    max_tokens=1200
+                )
+                st.subheader("Grok Response:")
+                st.write(response.choices[0].message.content)
             except Exception as e:
                 st.error(f"Error: {str(e)}")
