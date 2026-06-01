@@ -3,39 +3,39 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-# Load .env file
+# Load API key
 load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY").strip()  # .strip() added for safety
 
-# Get API key
-api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    st.error("API Key nahi mili .env file mein!")
+    st.stop()
 
-# Configure Gemini
 genai.configure(api_key=api_key)
 
-# Load model
-model = genai.GenerativeModel("gemini-2.5-flash")
+# Fixed Model Name
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-# App title
 st.title("AI Study Assistant")
+st.write("Ask questions about studies and programming")
 
-st.write("Ask questions about studies, programming, or concepts.")
+question = st.text_input("Enter your question:")
 
-# User input
-user_question = st.text_input("Enter your question:")
-
-# Button
 if st.button("Submit"):
-
-    system_prompt = """
-    You are a friendly study assistant.
-    Explain topics in simple language for beginners.
-    Give short and clear answers.
-    """
-
-    final_prompt = system_prompt + user_question
-
-    response = model.generate_content(final_prompt)
-
-    st.subheader("AI Response:")
-
-    st.write(response.text)
+    if question:
+        with st.spinner("Thinking..."):
+            system_prompt = """
+            You are a friendly study assistant.
+            Explain concepts simply for beginners.
+            """
+            
+            final_prompt = system_prompt + "\n\nQuestion: " + question
+            
+            try:
+                response = model.generate_content(final_prompt)
+                st.subheader("AI Response:")
+                st.write(response.text)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+    else:
+        st.warning("Please enter a question!")
