@@ -1,44 +1,34 @@
 import streamlit as st
 import google.generativeai as genai
+from dotenv import load_dotenv
+import os
 
-# Load API key from Streamlit Secrets
-api_key = st.secrets["GEMINI_API_KEY"]
+# Load API key from .env
+load_dotenv()
 
-# Configure Gemini
+api_key = os.getenv("GEMINI_API_KEY")
+
 genai.configure(api_key=api_key)
 
-# Load Gemini model
-model = genai.GenerativeModel("gemini-2.0-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-# App title
 st.title("AI Study Assistant")
 
 st.write("Ask questions about studies and programming")
 
-# User input
 question = st.text_input("Enter your question:")
 
-# Button
 if st.button("Submit"):
 
-    if question:
+    system_prompt = """
+    You are a friendly study assistant.
+    Explain concepts simply for beginners.
+    """
 
-        system_prompt = """
-        You are a friendly study assistant.
-        Explain concepts simply for beginners.
-        """
+    final_prompt = system_prompt + question
 
-        final_prompt = system_prompt + question
+    response = model.generate_content(final_prompt)
 
-        try:
-            response = model.generate_content(final_prompt)
+    st.subheader("AI Response:")
 
-            st.subheader("AI Response:")
-
-            st.write(response.text)
-
-        except Exception as e:
-            st.error(f"Error: {e}")
-
-    else:
-        st.warning("Please enter a question.")
+    st.write(response.text)
