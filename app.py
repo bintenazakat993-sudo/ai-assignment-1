@@ -1,40 +1,41 @@
 import streamlit as st
-from openai import OpenAI
+import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
+# Load .env file
 load_dotenv()
 
-api_key = os.getenv("XAI_API_KEY")
+# Get API key
+api_key = os.getenv("GEMINI_API_KEY")
 
-if not api_key:
-    st.error("XAI_API_KEY .env mein nahi mili!")
-    st.stop()
+# Configure Gemini
+genai.configure(api_key=api_key)
 
-client = OpenAI(
-    api_key=api_key.strip(),   # extra spaces remove karta hai
-    base_url="https://api.x.ai/v1"
-)
+# Load model
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-st.title("🧠 Grok AI Study Assistant")
-st.write("Koi bhi sawal poochho!")
+# App title
+st.title("AI Study Assistant")
 
-question = st.text_input("Enter your question:")
+st.write("Ask questions about studies, programming, or concepts.")
 
+# User input
+user_question = st.text_input("Enter your question:")
+
+# Button
 if st.button("Submit"):
-    if question:
-        with st.spinner("Grok soch raha hai..."):
-            try:
-                response = client.chat.completions.create(
-                    model="grok-3",
-                    messages=[
-                        {"role": "system", "content": "You are a friendly study assistant."},
-                        {"role": "user", "content": question}
-                    ]
-                )
-                st.subheader("Grok Response:")
-                st.write(response.choices[0].message.content)
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
-    else:
-        st.warning("Question likho!")
+
+    system_prompt = """
+    You are a friendly study assistant.
+    Explain topics in simple language for beginners.
+    Give short and clear answers.
+    """
+
+    final_prompt = system_prompt + user_question
+
+    response = model.generate_content(final_prompt)
+
+    st.subheader("AI Response:")
+
+    st.write(response.text)
