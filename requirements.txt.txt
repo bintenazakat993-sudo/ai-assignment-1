@@ -1,4 +1,4 @@
 streamlit
-openai
+groq
 python-dotenv
-google-generativeai
+reportlab
