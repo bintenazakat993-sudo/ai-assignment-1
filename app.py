@@ -126,7 +126,7 @@ language = st.sidebar.selectbox(
     [
         "English",
         "Roman Urdu",
-        "Roman English"
+        "Simple English"
     ]
 )
 
@@ -185,13 +185,27 @@ if uploaded_file is not None:
 # =========================
 
 if language == "English":
-    lang_prompt = "Reply only in simple English."
+    lang_prompt = """
+Reply ONLY in English.
+Use simple and easy English.
+Do not use Roman Urdu.
+"""
 
 elif language == "Roman Urdu":
-    lang_prompt = "Reply only in Roman Urdu. Never use Urdu script."
+    lang_prompt = """
+Reply ONLY in Roman Urdu.
+Never use Urdu script.
+Never reply in English except technical words.
+
+Example:
+"Binary Search aik searching algorithm hai jo sorted list par kaam karta hai."
+"""
 
 else:
-    lang_prompt = "Reply in Roman English using easy English words."
+    lang_prompt = """
+Reply ONLY in simple English.
+Use beginner-friendly words.
+"""
 
 # =========================
 # Generate Button
@@ -299,16 +313,17 @@ Topic:
 
             model="llama-3.3-70b-versatile",
 
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a friendly Student Mentor AI."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
+          messages=[
+    {
+        "role": "system",
+        "content": f"""
+You are Student Mentor AI.
+
+Always follow the selected language.
+
+{lang_prompt}
+"""
+    },
 
             temperature=0.5,
             max_tokens=1500
