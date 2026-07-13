@@ -312,8 +312,7 @@ Topic:
         response = client.chat.completions.create(
 
             model="llama-3.3-70b-versatile",
-
-          messages=[
+messages=[
     {
         "role": "system",
         "content": f"""
@@ -324,6 +323,11 @@ Always follow the selected language.
 {lang_prompt}
 """
     },
+    {
+        "role": "user",
+        "content": prompt
+    }
+],
 
             temperature=0.5,
             max_tokens=1500
