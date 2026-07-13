@@ -152,7 +152,10 @@ user_input = st.text_area(
 )
 
 # =========================
-# Language Promptuploaded_file = st.file_uploader(
+# File Upload
+# =========================
+
+uploaded_file = st.file_uploader(
     "📄 Upload Lecture Notes",
     type=["txt", "pdf"]
 )
@@ -175,6 +178,10 @@ if uploaded_file is not None:
                 text += extracted + "\n"
 
         user_input = text
+
+
+# =========================
+# Language Prompt
 # =========================
 
 if language == "English":
