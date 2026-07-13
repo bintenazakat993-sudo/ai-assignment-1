@@ -152,7 +152,29 @@ user_input = st.text_area(
 )
 
 # =========================
-# Language Prompt
+# Language Promptuploaded_file = st.file_uploader(
+    "📄 Upload Lecture Notes",
+    type=["txt", "pdf"]
+)
+
+if uploaded_file is not None:
+
+    if uploaded_file.type == "text/plain":
+        user_input = uploaded_file.read().decode("utf-8")
+
+    elif uploaded_file.type == "application/pdf":
+        import PyPDF2
+
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+
+        text = ""
+
+        for page in pdf_reader.pages:
+            extracted = page.extract_text()
+            if extracted:
+                text += extracted + "\n"
+
+        user_input = text
 # =========================
 
 if language == "English":
