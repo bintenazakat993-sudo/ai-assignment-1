@@ -192,6 +192,11 @@ elif language == "Roman Urdu":
 
 else:
     lang_prompt = "Reply in Roman English using easy English words."
+
+# =========================
+# Generate Button
+# =========================
+
 if st.button("🚀 Generate"):
 
     if user_input.strip() == "":
